@@ -9,4 +9,3 @@ textFiles: 0 "controllers/pid_with_dead_end/pid_with_dead_end.py"
 globalOptionalRendering: DistanceSensorRays
 consoles: Console:All:All
 renderingDevicePerspectives: e-puck(1):camera;0;1;0;0
-
