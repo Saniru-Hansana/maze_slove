@@ -38,7 +38,7 @@ imu.getSamplingPeriod()
 
 
 #setup distance sensors
-ds_names = ["ps0","ps1","ps2","ps3","ps4","ps5","ps6","ps7"]
+ds_names = ["ps0","ps1","ps2","ps3","ps4","ps5","ps6","ps7","ps8"]
 for i in range (len(ds_names)):
    ds_names[i] = robot.getDevice(ds_names[i])
    ds_names[i].enable(timestep)
@@ -109,8 +109,20 @@ def left_wall(obstacle):
 lfp = 1
 rfp= 1
 while robot.step(timestep) != -1:
-   print(f'05 : {ds_names[5].getValue()} 06 : {ds_names[6].getValue()} 06-6 {(1/math.cos(3.14-2.37))*ds_names[6].getValue()}')
-   
+  # print(f'05 : {ds_names[5].getValue()} 06 : {ds_names[6].getValue()} 06-6 {(1/math.cos(3.14-2.37))*ds_names[6].getValue()}')
+   print(ds_names[5].getValue())
+   fr = ds_names[8].getValue() < 250 
+   lf = ds_names[5].getValue() > 3500 
+   '''if lf and fr == False :
+      go(2,2)
+   elif lf and fr :
+      go (2,-2)
+   elif fr and lf == False :
+      go (-2,2)
+   else:
+      (0.2,2)'''
+
+  
 
   
      
