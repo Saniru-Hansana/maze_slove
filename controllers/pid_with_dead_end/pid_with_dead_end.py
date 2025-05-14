@@ -151,6 +151,8 @@ while robot.step(timestep) != -1 and state <= 4 :
    if color_seq[state] == color and found [state] == 0:
       print(f'{color} color wall found')
       state +=1
+    if state == 5:
+        go(0,0)
    
          
    #find_colors()
