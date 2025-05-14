@@ -1,6 +1,6 @@
 """pid_with_dead_end controller."""
 
-from controller import Robot
+from controller import Robot,Camera
 import math
 
 # create the Robot instance.
@@ -45,7 +45,10 @@ for i in range (len(ds_names)):
    ds_names[i].enable(timestep)
    ds_names[i].getSamplingPeriod()
 
-
+#enable camera
+cam = robot.getDevice("camera(1)")
+cam.enable(timestep)
+cam.recognitionEnable(timestep)
 
 def go(left_spd,right_spd): # to drive the wheels
     left_motor.setVelocity(left_spd)
@@ -82,7 +85,28 @@ def left_wall_follow():
       rfs = 3
    go(lfs,rfs)
 
-
+def find_colors():
+   width = cam.getWidth()
+   height = cam.getHeight()
+   image = cam.getImage()
+   if image:
+      red = 0
+      green = 0
+      blue = 0
+      for i in range(int(width / 3), int(2 * width / 3)):
+         for j in range(int(height / 2), int(3 * height / 4)):
+               red += Camera.imageGetRed(image, width, i, j)
+               green += Camera.imageGetGreen(image, width, i, j)
+               blue += Camera.imageGetBlue(image, width, i, j)
+      #print(f'red = {red} green = {green} blue = {blue}')
+      if red > blue and red > green :
+         print("red" )
+      if red == blue :
+         print("pink" )
+      if  red == green :
+         print("yellow" )
+      if red < blue and blue > green :
+         print("blue" )
 
 
    
@@ -95,6 +119,20 @@ lfp = 1
 rfp= 1
 while robot.step(timestep) != -1:
    left_wall_follow()
+   number_of_objects = cam.getRecognitionNumberOfObjects()
+   print(f'Recognized {number_of_objects} objects.')
+   print(' ')
+   objects =cam.getRecognitionObjects()
+   counter = 1
+   for object in objects:
+         number_of_colors = object.getNumberOfColors()
+         colors = object.getColors()
+         for j in range(number_of_colors):
+            print(f'  Color {j + 1}/{number_of_colors}: '
+                  f'{colors[3 * j]} {colors[3 * j + 1]} {colors[3 * j + 2]}')
+         print(' ')
+         counter += 1
+   #find_colors()
    pass
 
   
