@@ -7,7 +7,8 @@ import math
 robot = Robot()
 ds_val = [0,0,0,0,0,0,0,0]
 state = 0 # when the robot starts state is 0 until it goes to left? right wall
-
+color_seq = ["red","green","yellow","orange","pink"]
+found = [0,0,0,0,0]
 
 
 # get the time step of the current world.
@@ -108,6 +109,33 @@ def find_colors():
       if red < blue and blue > green :
          print("blue" )
 
+def recog_colors():
+   #number_of_objects = cam.getRecognitionNumberOfObjects()
+   #print(f'Recognized {number_of_objects} objects.')
+   #print(' ')
+   objects =cam.getRecognitionObjects()
+   counter = 1
+   for object in objects:
+         number_of_colors = object.getNumberOfColors()
+         colors = object.getColors()
+         for j in range(number_of_colors):
+            red=colors[3*j]
+            green=colors[3*j+1]
+            blue = colors[3*j+2]
+            
+         #print(f'red = {red} green = {green} blue = {blue}')
+         if red == 1 and green == 0 and blue == 0 :
+            return "red"
+         elif red == 0 and green == 1 and blue == 0 :
+            return "green"
+         elif red == 1 and green == 1 and blue == 0 :
+            return "yellow"
+         elif red == 1 and green == 0 and blue == 1 :
+            return "pink"
+         elif red == 0.6 and green == 0.4 and blue == 0 :
+            return "orange"
+         else :
+            return "no object "
 
    
 
@@ -117,21 +145,14 @@ def find_colors():
 # - perform simulation steps until Webots is stopping the controller
 lfp = 1
 rfp= 1
-while robot.step(timestep) != -1:
+while robot.step(timestep) != -1 and state <= 4 :
    left_wall_follow()
-   number_of_objects = cam.getRecognitionNumberOfObjects()
-   print(f'Recognized {number_of_objects} objects.')
-   print(' ')
-   objects =cam.getRecognitionObjects()
-   counter = 1
-   for object in objects:
-         number_of_colors = object.getNumberOfColors()
-         colors = object.getColors()
-         for j in range(number_of_colors):
-            print(f'  Color {j + 1}/{number_of_colors}: '
-                  f'{colors[3 * j]} {colors[3 * j + 1]} {colors[3 * j + 2]}')
-         print(' ')
-         counter += 1
+   color = recog_colors()
+   if color_seq[state] == color and found [state] == 0:
+      print(f'{color} color wall found')
+      state +=1
+   
+         
    #find_colors()
    pass
 
